@@ -39,33 +39,34 @@ load — demonstrably fine — was one fallback away.
 
 ## Repro
 
+Automated (one command after install; Playwright is only used here, to click
+the link in a real browser and check the result):
+
 ```bash
 npm install
-npx playwright install chromium   # for the automated crash assertion
+npx playwright install chromium
+npm run repro
+```
+
+`npm run repro` builds if needed, starts Next (:3001) and the cache (:3000),
+seeds one prefetch response, clicks the link in headless Chromium, prints the
+verdict, and cleans up.
+
+Manual (no Playwright):
+
+```bash
+npm install
 npm run build
+npm start        # both servers in one terminal
 ```
 
-Terminal A:
+Then `npm run seed`, open **http://localhost:3000**, click **"go to /target"**
+→ the error screen. Open http://localhost:3000/target directly in a new tab →
+renders fine.
 
-```bash
-npm run start:next    # next start on :3001
-```
-
-Terminal B:
-
-```bash
-npm run start:cache   # the cache on :3000
-```
-
-Terminal C:
-
-```bash
-npm run repro         # seeds ONE prefetch response, then asserts the crash
-```
-
-Or manually: `npm run seed`, open **http://localhost:3000**, click
-**"go to /target"** → the error screen. Open http://localhost:3000/target
-directly in a new tab → renders fine.
+Note: production mode is required, not incidental — the payload being
+demonstrated (a partial prefetch of a Partial Prerender route) only exists for
+a built app; `next dev` does not prerender, so it has nothing to mis-serve.
 
 ## Verified output
 

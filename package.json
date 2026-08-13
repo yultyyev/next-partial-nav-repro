@@ -3,11 +3,10 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "start:next": "next start -p 3001",
-    "start:cache": "node cache-proxy.mjs",
+    "start": "node start.mjs",
     "seed": "node seed.mjs",
     "verify": "node verify.mjs",
-    "repro": "node seed.mjs && node crash.mjs"
+    "repro": "node repro.mjs"
   },
   "dependencies": {
     "next": "16.3.0",
