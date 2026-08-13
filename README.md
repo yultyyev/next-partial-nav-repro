@@ -39,30 +39,21 @@ load — demonstrably fine — was one fallback away.
 
 ## Repro
 
-Automated (one command after install; Playwright is only used here, to click
-the link in a real browser and check the result):
-
-```bash
-npm install
-npx playwright install chromium
-npm run repro
-```
-
-`npm run repro` builds if needed, starts Next (:3001) and the cache (:3000),
-seeds one prefetch response, clicks the link in headless Chromium, prints the
-verdict, and cleans up.
-
-Manual (no Playwright):
-
 ```bash
 npm install
 npm run build
-npm start        # both servers in one terminal
+npm start        # Next on :3001 and the cache proxy on :3000, one terminal
+npm run seed     # stores one prefetch response in the cache
 ```
 
-Then `npm run seed`, open **http://localhost:3000**, click **"go to /target"**
-→ the error screen. Open http://localhost:3000/target directly in a new tab →
+Open **http://localhost:3000** and click **"go to /target"** — you get the
+error screen ("This page couldn't load") with `Minified React error #412` in
+the console. Open http://localhost:3000/target directly in a new tab — it
 renders fine.
+
+Optional automated check (`npx playwright install chromium` first):
+`npm run repro` builds/starts/seeds by itself, clicks the link in headless
+Chromium, prints the verdict below, and cleans up.
 
 Note: production mode is required, not incidental — the payload being
 demonstrated (a partial prefetch of a Partial Prerender route) only exists for
